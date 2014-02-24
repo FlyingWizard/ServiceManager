@@ -21,12 +21,12 @@ public class Customer {
 	private String fName;
 	@Column(nullable = false, columnDefinition="varchar(100)")
 	private String lName;
-	@Column(nullable = false, columnDefinition="varchar(20)")
+	@Column(nullable = true, columnDefinition="varchar(20)")
 	private String vatNr;
 	@ManyToMany
 	private List<Address> deliveryAdresses;
 	@OneToOne
-	private Address invoiceAddresses;
+	private Address invoiceAddress;
 	
 	public int getId() {
 		return id;
@@ -58,11 +58,11 @@ public class Customer {
 	public void setDeliveryAdresses(List<Address> deliveryAdresses) {
 		this.deliveryAdresses = deliveryAdresses;
 	}
-	public Address getInvoiceAddresses() {
-		return invoiceAddresses;
+	public Address getInvoiceAddress() {
+		return invoiceAddress;
 	}
-	public void setInvoiceAddresses(Address invoiceAddresses) {
-		this.invoiceAddresses = invoiceAddresses;
+	public void setInvoiceAddress(Address invoiceAddress) {
+		this.invoiceAddress = invoiceAddress;
 	}
 	@Override
 	public String toString(){
