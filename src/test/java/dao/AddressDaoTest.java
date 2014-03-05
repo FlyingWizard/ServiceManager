@@ -6,14 +6,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import dao.entity.Address;
 import dao.service.AddressDao;
+import dao.service.PersistanceManager;
 
 
 public class AddressDaoTest {
@@ -22,20 +22,18 @@ public class AddressDaoTest {
 	public void initEmfAndEm() {
 		Logger.getLogger("org").setLevel(Level.SEVERE);
 	}
+	@After
+	public void cleanUp(){
+		PersistanceManager.cleanResources();
+	}
 
 	@Test
 	public void testBasic() {
 		boolean ok = false;
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("serviceManagerPU");
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = PersistanceManager.getEntityManager();
 		if(em!=null){
 			ok = true;
 		}
-			
-		if(em!=null && em.isOpen())
-			em.close();
-		if(emf!=null && emf.isOpen())
-			emf.close();
 		assertTrue(ok);
 	}
 	@Test

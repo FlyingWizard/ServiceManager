@@ -1,78 +1,38 @@
 package dao.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.entity.Contact;
 import dao.entity.ContactType;
 
 public class ContactDao extends DaoService {
-	public void insertContact(Contact c) throws Exception {
-
-		try {
-
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			this.initTransaction();
-
-			tx.begin();
-			em.persist(c);
-			tx.commit();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
-		}
-
+	public void insertContact(Contact c) throws Exception{
+		this.saveObject(c);
 	}
-
+	public void insertContactType(ContactType c) throws Exception{
+		this.saveObject(c);
+	}
 	/**
 	 * Selects all Addresss.
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Contact> findAllContacts() throws Exception {
-		List<Contact> result = null;
-		try {
+		List<Contact> result = new ArrayList<Contact>();
 
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
+		List<Object> temp = this.getResultsList("findAllContacts");
+		if(temp != null && temp.size()>0){
+			for(Object o : temp){
+				if(o!=null)
+					result.add((Contact)o);
 			}
-
-			result = em.createNamedQuery("findAllContacts").getResultList();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
 		}
 
 		return result;
 	}
 	
-	public void insertContactType(ContactType ct) throws Exception {
-
-		try {
-
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			this.initTransaction();
-
-			tx.begin();
-			em.persist(ct);
-			tx.commit();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
-		}
-
-	}
 	/**
 	 * Find an contact with the primary key.
 	 * @param key
@@ -80,66 +40,46 @@ public class ContactDao extends DaoService {
 	 * @throws Exception
 	 */
 	public Contact findContactByKey(int key) throws Exception{
-		Contact result = null;
-		try {
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			result = em.find(Contact.class, key);
-		} catch (Exception e) {
-			throw e;
-		}
-		finally {
-			this.cleanResources();
-		}
+		Contact result = getEntityManager().find(Contact.class, key);
 		return result;
 	}
-	
+	/**
+	 * Search a specific contactType.
+	 * When not found the type will be created.
+	 * @param type
+	 * @return
+	 * @throws Exception
+	 */
 	@SuppressWarnings("unchecked")
 	public ContactType findContactType(String type) throws Exception{
-		List<ContactType> result = null;
-		try {
+		List<ContactType> result = new ArrayList<ContactType>();
 
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
+		List<Object> temp = getEntityManager().createNamedQuery("findContacttypeByType")
+				.setParameter("itype", type.toLowerCase()).getResultList();
+		if(temp != null && temp.size()>0){
+			for(Object o : temp){
+				if(o!=null)
+					result.add((ContactType)o);
 			}
-
-			result = em.createNamedQuery("findContacttypeByType")
-					.setParameter("itype", type.toLowerCase())
-				    .getResultList();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
 		}
+
 		if(result != null && !result.isEmpty()){
 			return result.get(0);
 		}
 		ContactType ct = new ContactType(type);
-		this.insertContactType(ct);
+		this.saveObject(ct);
 		return ct;
 	}
-	@SuppressWarnings("unchecked")
-	public ContactType findAllContactTypes() throws Exception{
-		List<ContactType> result = null;
-		try {
-
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
+	public List<ContactType> findAllContactTypes() throws Exception{
+		List<ContactType> result = new ArrayList<ContactType>();
+		List<Object> temp = this.getResultsList("findAllContacttypes");
+		if(temp != null && temp.size()>0){
+			for(Object o : temp){
+				if(o!=null)
+					result.add((ContactType)o);
 			}
-
-			result = em.createNamedQuery("findAllContacttypes").getResultList();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
 		}
-		if(result != null && !result.isEmpty()){
-			return result.get(0);
-		}
-		return null;
+		return result;
 	}
 	/**
 	 * Find an conttttacttype with the primary key.
@@ -148,36 +88,10 @@ public class ContactDao extends DaoService {
 	 * @throws Exception
 	 */
 	public ContactType findContactTypeByKey(int key) throws Exception{
-		ContactType result = null;
-		try {
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			result = em.find(ContactType.class, key);
-		} catch (Exception e) {
-			throw e;
-		}
-		finally {
-			this.cleanResources();
-		}
+		ContactType result = getEntityManager().find(ContactType.class, key);
 		return result;
 	}
 	public void deleteContact(Contact c) throws Exception{
-		try {
-
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			this.initTransaction();
-
-			tx.begin();
-			em.remove(em.merge(c));
-			tx.commit();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
-		}
+		this.removeObject(c);
 	}
 }

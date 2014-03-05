@@ -1,30 +1,13 @@
 package dao.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import dao.entity.Customer;
 import dao.entity.Employee;
 
 public class EmployeeDao extends DaoService {
 	public void insertEmployee(Employee emp) throws Exception {
-
-		try {
-
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			this.initTransaction();
-
-			tx.begin();
-			em.persist(emp);
-			tx.commit();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
-		}
-
+		this.saveObject(emp);
 	}
 
 	/**
@@ -33,23 +16,15 @@ public class EmployeeDao extends DaoService {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Employee> findAllEmployees() throws Exception {
-		List<Employee> result = null;
-		try {
-
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
+		List<Employee> result = new ArrayList<Employee>();
+		List<Object> temp = this.getResultsList("findAllEmployees");
+		if(temp != null && temp.size()>0){
+			for(Object o : temp){
+				if(o!=null)
+					result.add((Employee)o);
 			}
-
-			result = em.createNamedQuery("findAllEmployees").getResultList();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
 		}
-
 		return result;
 	}
 	/**
@@ -59,37 +34,11 @@ public class EmployeeDao extends DaoService {
 	 * @throws Exception
 	 */
 	public Employee findEmployeeByKey(int key) throws Exception{
-		Employee result = null;
-		try {
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			result = em.find(Employee.class, key);
-		} catch (Exception e) {
-			throw e;
-		}
-		finally {
-			this.cleanResources();
-		}
+		Employee result = getEntityManager().find(Employee.class, key);
 		return result;
 	}
 	public void deleteEmployee(Employee empl) throws Exception{
-		try {
-
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			this.initTransaction();
-
-			tx.begin();
-			em.remove(em.merge(empl));
-			tx.commit();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
-		}
+		this.removeObject(empl);
 	}
 
 }

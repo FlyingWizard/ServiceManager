@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
@@ -48,6 +47,19 @@ public class ServiceCall {
 		this.opened = new Date();
 		this.addCustomer(cust);
 		this.addResponsible(resp);
+	}
+	/**
+	 * Creates a new service calls.
+	 * Auto sets the opened data.
+	 * @param cust
+	 * @param sd
+	 * @param ld
+	 */
+	public ServiceCall(Customer cust, String sd, String ld){
+		this.shortDescription = sd;
+		this.longDescription = ld;
+		this.opened = new Date();
+		this.addCustomer(cust);
 	}
 	
 	public int getId() {

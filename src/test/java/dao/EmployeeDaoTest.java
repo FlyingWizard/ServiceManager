@@ -6,15 +6,14 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import dao.entity.Address;
-import dao.entity.Customer;
 import dao.entity.Employee;
-import dao.service.ContactDao;
-import dao.service.CustomerDao;
 import dao.service.EmployeeDao;
+import dao.service.PersistanceManager;
 
 
 public class EmployeeDaoTest {
@@ -22,6 +21,10 @@ public class EmployeeDaoTest {
 	@Before
 	public void initEmfAndEm() {
 		Logger.getLogger("org").setLevel(Level.SEVERE);
+	}
+	@After
+	public void cleanUp(){
+		PersistanceManager.cleanResources();
 	}
 
 	@Test
@@ -57,21 +60,30 @@ public class EmployeeDaoTest {
 
 		try {
 			List<Employee> employees = ed.findAllEmployees();
-			for(Employee e : employees){
-				if(e.getLastName().equals("HeylenTest")){
-					test = e;
+			if(employees == null || employees.isEmpty()){
+				Address a = new Address("Veldweg","103","2260","Westerlo");
+				Employee emp = new Employee("Jos", "HeylenTest", a, "jh@mail.com", "0488556699");
+				ed.insertEmployee(emp);
+				key = emp.getId();
+			}else{
+				for(Employee e : employees){
+					if(e!=null && e.getLastName().equals("HeylenTest")){
+						test = e;
+					}
 				}
+				key = test.getId();
 			}
-			key = test.getId();
+			test = ed.findEmployeeByKey(key);
 			ed.deleteEmployee(test);
 			test = null;
 			test = ed.findEmployeeByKey(key);
 			assertTrue(test == null);
 			for(Employee e : ed.findAllEmployees()){
-				if(e.getLastName().equals("HeylenTest")){
+				if(e!=null && e.getLastName().equals("HeylenTest")){
 					ed.deleteEmployee(e);
 				}
 			}
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(false);

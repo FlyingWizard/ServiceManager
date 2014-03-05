@@ -1,29 +1,13 @@
 package dao.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.entity.ServiceCall;
 
 public class ServiceCallDao extends DaoService {
 	public void insertServiceCall(ServiceCall call) throws Exception {
-
-		try {
-
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			this.initTransaction();
-
-			tx.begin();
-			em.persist(call);
-			tx.commit();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
-		}
-
+		this.saveObject(call);
 	}
 
 	/**
@@ -32,23 +16,15 @@ public class ServiceCallDao extends DaoService {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public List<ServiceCall> findAllServiceCalls() throws Exception {
-		List<ServiceCall> result = null;
-		try {
-
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
+		List<ServiceCall> result = new ArrayList<ServiceCall>();
+		List<Object> temp = this.getResultsList("findAllServiceCalls");
+		if(temp != null && temp.size()>0){
+			for(Object o : temp){
+				if(o!=null)
+					result.add((ServiceCall)o);
 			}
-
-			result = em.createNamedQuery("findAllServiceCalls").getResultList();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
 		}
-
 		return result;
 	}
 	/**
@@ -58,37 +34,12 @@ public class ServiceCallDao extends DaoService {
 	 * @throws Exception
 	 */
 	public ServiceCall findServiceCallByKey(int key) throws Exception{
-		ServiceCall result = null;
-		try {
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			result = em.find(ServiceCall.class, key);
-		} catch (Exception e) {
-			throw e;
-		}
-		finally {
-			this.cleanResources();
-		}
+		ServiceCall result = getEntityManager().find(ServiceCall.class, key);
 		return result;
 	}
 	public void deleteServiceCall(ServiceCall sc) throws Exception{
-		try {
-
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			this.initTransaction();
-
-			tx.begin();
-			em.remove(em.merge(sc));
-			tx.commit();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
-		}
+		this.removeObject(sc);
 	}
+	
 }
 

@@ -1,31 +1,131 @@
 package dao.service;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.Query;
 
+/**
+ * Base Dao class to provide all basic Eclipselink operation towards the DB
+ * @author Stijn Heylen
+ *
+ */
 public abstract class DaoService {
-	protected EntityManagerFactory emf;
-	protected EntityManager em;
 	protected EntityTransaction tx;
-
-	protected void initEntityManager() {
-		// Get an Entitymanager
-		emf = Persistence.createEntityManagerFactory("serviceManagerPU");
-		em = emf.createEntityManager();
+	
+	protected EntityManager getEntityManager(){
+		return PersistanceManager.getEntityManager();
 	}
 
 	protected void initTransaction() {
 		// Get a transaction and persist the book
-		tx = em.getTransaction();
+		tx = getEntityManager().getTransaction();
 	}
 
-	protected void cleanResources() {
-		// Close resources
-		if(em!=null && em.isOpen())
-			em.close();
-		if(emf!=null && emf.isOpen())
-			emf.close();
+	public void saveObject(Object obj) throws Exception {
+
+		try {
+
+			getEntityManager().getTransaction().begin();
+
+			getEntityManager().persist(obj);
+
+			getEntityManager().getTransaction().commit();
+
+		} catch (Exception e) {
+
+			if (getEntityManager().getTransaction().isActive()) {
+
+				getEntityManager().getTransaction().rollback();
+
+			}
+
+			throw e;
+
+		}
+
+	}
+	public void removeObject(Object obj) throws Exception {
+
+		try {
+
+			getEntityManager().getTransaction().begin();
+
+			//Check to verify if the object is managed
+			if(!getEntityManager().contains(obj))
+				getEntityManager().merge(obj);
+				
+			getEntityManager().remove(obj);
+
+			getEntityManager().getTransaction().commit();
+
+		} catch (Exception e) {
+
+			if (getEntityManager().getTransaction().isActive()) {
+
+				getEntityManager().getTransaction().rollback();
+
+			}
+
+			throw e;
+
+		}
+
+	}
+
+	protected Object getSingleResultSet(String namedQuery) {
+
+		Query query = null;
+
+		try {
+
+			query = getEntityManager().createNamedQuery(namedQuery);
+
+		} catch (Exception ex) {
+
+			return ex;
+
+		}
+
+		return query.getSingleResult();
+
+	}
+
+	@SuppressWarnings("unchecked")
+	protected List<Object> getResultsList(String namedQuery) throws Exception {
+
+		Query query = null;
+
+		try {
+
+			query = getEntityManager().createNamedQuery(namedQuery);
+
+		} catch (Exception ex) {
+
+			throw ex;
+
+		}
+		return query.getResultList();
+
+	}
+
+	@SuppressWarnings("unchecked")
+	protected List<Object> getpaginatedResultList(String namedQuery, int startIndex,
+			int maxResult) throws Exception {
+
+		Query query = null;
+
+		try {
+
+			query = getEntityManager().createNamedQuery(namedQuery).setFirstResult(startIndex)
+					.setMaxResults(maxResult);
+
+		} catch (Exception ex) {
+
+			throw ex;
+
+		}
+		return query.getResultList();
 	}
 }

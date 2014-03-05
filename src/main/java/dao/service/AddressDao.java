@@ -1,53 +1,29 @@
 package dao.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.entity.Address;
-import dao.entity.Customer;
 
 public class AddressDao extends DaoService {
-	public void insertAddress(Address myAddress) throws Exception {
-
-		try {
-
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			this.initTransaction();
-
-			tx.begin();
-			em.persist(myAddress);
-			tx.commit();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
-		}
-
+	public void insertAddress(Address a) throws Exception{
+		this.saveObject(a);
 	}
-
 	/**
 	 * Selects all Addresss.
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Address> findAllAddresss() throws Exception {
-		List<Address> result = null;
-		try {
+		List<Address> result = new ArrayList<Address>();
 
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
+		List<Object> temp = this.getResultsList("findAllAddresses");
+		if(temp != null && temp.size()>0){
+			for(Object o : temp){
+				if(o!=null)
+					result.add((Address)o);
 			}
-
-			result = em.createNamedQuery("findAllAddresses").getResultList();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
 		}
 
 		return result;
@@ -59,37 +35,16 @@ public class AddressDao extends DaoService {
 	 * @throws Exception
 	 */
 	public Address findAddressByKey(int key) throws Exception{
-		Address result = null;
-		try {
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			result = em.find(Address.class, key);
-		} catch (Exception e) {
-			throw e;
-		}
-		finally {
-			this.cleanResources();
-		}
+		Address result = getEntityManager().find(Address.class, key);
 		return result;
 	}
+	/**
+	 * Removes the Address
+	 * @param a
+	 * @throws Exception
+	 */
 	public void deleteAddress(Address a) throws Exception{
-		try {
-
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			this.initTransaction();
-
-			tx.begin();
-			em.remove(em.merge(a));
-			tx.commit();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
-		}
+		this.removeObject(a);
 	}
 
 }

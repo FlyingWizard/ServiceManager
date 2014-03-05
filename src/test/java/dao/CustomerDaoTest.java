@@ -6,16 +6,17 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import dao.entity.Address;
 import dao.entity.Contact;
 import dao.entity.Customer;
-import dao.entity.Employee;
 import dao.service.ContactDao;
 import dao.service.ContactTypeCST;
 import dao.service.CustomerDao;
+import dao.service.PersistanceManager;
 
 
 public class CustomerDaoTest {
@@ -23,6 +24,10 @@ public class CustomerDaoTest {
 	@Before
 	public void initEmfAndEm() {
 		Logger.getLogger("org").setLevel(Level.SEVERE);
+	}
+	@After
+	public void cleanUp(){
+		PersistanceManager.cleanResources();
 	}
 
 	@Test
@@ -64,7 +69,7 @@ public class CustomerDaoTest {
 			Customer c = new Customer("Stijn","HeylenTest","BE0822556699");
 			ContactDao ctcd = new ContactDao();
 			ContactTypeCST helper = new ContactTypeCST();	
-			c.AddContact("sh@gmail.com",helper.EMAIL() );
+			c.addContact("sh@gmail.com",helper.EMAIL() );
 
 			cd.insertCustomer(c);
 			key = c.getId();
@@ -92,7 +97,12 @@ public class CustomerDaoTest {
 
 		try {
 			List<Customer> customers = cd.findCustomersByLastName("HeylenTest");
-			test = customers.get(0);
+			if(customers.isEmpty()){
+				test = new Customer("Stijn","HeylenTest","BE0822556699");
+				cd.saveObject(test);
+			}else{
+				test = customers.get(0);
+			}
 			key = test.getId();
 			cd.deleteCustomer(test);
 			test = null;

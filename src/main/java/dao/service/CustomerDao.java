@@ -1,29 +1,13 @@
 package dao.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.entity.Customer;
 
 public class CustomerDao extends DaoService {
 	public void insertCustomer(Customer cust) throws Exception {
-
-		try {
-
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			this.initTransaction();
-
-			tx.begin();
-			em.persist(cust);
-			tx.commit();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
-		}
-
+		this.saveObject(cust);
 	}
 
 	/**
@@ -32,21 +16,15 @@ public class CustomerDao extends DaoService {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Customer> findAllCustomers() throws Exception {
-		List<Customer> result = null;
-		try {
+		List<Customer> result = new ArrayList<Customer>();
 
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
+		List<Object> temp = this.getResultsList("findAllCustomers");
+		if(temp != null && temp.size()>0){
+			for(Object o : temp){
+				if(o!=null)
+					result.add((Customer)o);
 			}
-
-			result = em.createNamedQuery("findAllCustomers").getResultList();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
 		}
 
 		return result;
@@ -58,18 +36,7 @@ public class CustomerDao extends DaoService {
 	 * @throws Exception
 	 */
 	public Customer findCustomerByKey(int key) throws Exception{
-		Customer result = null;
-		try {
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			result = em.find(Customer.class, key);
-		} catch (Exception e) {
-			throw e;
-		}
-		finally {
-			this.cleanResources();
-		}
+		Customer result = getEntityManager().find(Customer.class, key);
 		return result;
 	}
 	/**
@@ -80,41 +47,18 @@ public class CustomerDao extends DaoService {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Customer> findCustomersByLastName(String name) throws Exception{
-		List<Customer> result = null;
-		try {
-
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
+		List<Customer> result = new ArrayList<Customer>();
+		List<Object> temp = getEntityManager().createNamedQuery("findCustomersByLastName")
+				.setParameter("iLname",name.toLowerCase()).getResultList();
+		if(temp != null && temp.size()>0){
+			for(Object o : temp){
+				if(o!=null)
+					result.add((Customer)o);
 			}
-
-			result = em.createNamedQuery("findCustomersByLastName")
-					.setParameter("iLname", name.toLowerCase())
-				    .getResultList();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
 		}
-		
 		return result;
 	}
 	public void deleteCustomer(Customer c) throws Exception{
-		try {
-
-			if (em == null || !em.isOpen()) {
-				this.initEntityManager();
-			}
-			this.initTransaction();
-
-			tx.begin();
-			em.remove(em.merge(c));
-			tx.commit();
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this.cleanResources();
-		}
+		this.removeObject(c);
 	}
 }
