@@ -28,6 +28,10 @@ public class Address {
 	@Column(length = 500)
 	private String remark;
 	
+	/**
+	 * Default constructor required for EclipseLink
+	 */
+	public Address(){}
 	public Address(String street, String hnr, String zip, String city, String country){
 		this.street=street;
 		this.hNumber=hnr;
@@ -43,10 +47,6 @@ public class Address {
 		this.city=city;
 		this.active=true;
 	}
-	/**
-	 * Default constructor required for EclipseLink
-	 */
-	public Address(){}
 	
 	public int getId() {
 		return id;
@@ -76,13 +76,13 @@ public class Address {
 		return city;
 	}
 	public void setCity(String city) {
-		city = city;
+		this.city = city;
 	}
 	public String getCountry() {
 		return country;
 	}
 	public void setCountry(String country) {
-		country = country;
+		this.country = country;
 	}
 	public boolean isActive() {
 		return active;
@@ -95,5 +95,11 @@ public class Address {
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+	
+	@Override
+	public String toString(){
+		return "Address "+id+" "+ (active?"- ":"(nonActive)- ") + street + " "+ hNumber 
+				+ ", " + zipCode + " " + city + " " + country;
 	}
 }

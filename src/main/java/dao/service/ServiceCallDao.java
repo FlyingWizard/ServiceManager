@@ -3,9 +3,10 @@ package dao.service;
 import java.util.List;
 
 import dao.entity.Address;
+import dao.entity.ServiceCall;
 
-public class AddressDao extends DaoService {
-	public void insertAddress(Address myAddress) throws Exception {
+public class ServiceCallDao extends DaoService {
+	public void insertServiceCall(ServiceCall call) throws Exception {
 
 		try {
 
@@ -15,7 +16,7 @@ public class AddressDao extends DaoService {
 			this.initTransaction();
 
 			tx.begin();
-			em.persist(myAddress);
+			em.persist(call);
 			tx.commit();
 
 		} catch (Exception e) {
@@ -27,21 +28,21 @@ public class AddressDao extends DaoService {
 	}
 
 	/**
-	 * Selects all Addresss.
+	 * Selects all Service calls.
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Address> findAllAddresss() throws Exception {
-		List<Address> result = null;
+	public List<ServiceCall> findAllServiceCalls() throws Exception {
+		List<ServiceCall> result = null;
 		try {
 
 			if (em == null || !em.isOpen()) {
 				this.initEntityManager();
 			}
 
-			result = em.createNamedQuery("findAllAddresses").getResultList();
+			result = em.createNamedQuery("findAllServiceCalls").getResultList();
 
 		} catch (Exception e) {
 			throw new Exception();
@@ -52,18 +53,18 @@ public class AddressDao extends DaoService {
 		return result;
 	}
 	/**
-	 * Find an address with the primary key.
+	 * Find an ServiceCall with the primary key.
 	 * @param key
 	 * @return
 	 * @throws Exception
 	 */
-	public Address findAddressByKey(int key) throws Exception{
-		Address result = null;
+	public ServiceCall findServiceCallByKey(int key) throws Exception{
+		ServiceCall result = null;
 		try {
 			if (em == null || !em.isOpen()) {
 				this.initEntityManager();
 			}
-			result = em.find(Address.class, key);
+			result = em.find(ServiceCall.class, key);
 		} catch (Exception e) {
 			throw e;
 		}
@@ -72,5 +73,5 @@ public class AddressDao extends DaoService {
 		}
 		return result;
 	}
-
 }
+

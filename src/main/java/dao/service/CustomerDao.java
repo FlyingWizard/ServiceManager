@@ -2,6 +2,8 @@ package dao.service;
 
 import java.util.List;
 
+import dao.entity.Address;
+import dao.entity.ContactType;
 import dao.entity.Customer;
 
 public class CustomerDao extends DaoService {
@@ -27,7 +29,7 @@ public class CustomerDao extends DaoService {
 	}
 
 	/**
-	 * Selects all Addresss.
+	 * Selects all Customer.
 	 * 
 	 * @return
 	 * @throws Exception
@@ -51,5 +53,52 @@ public class CustomerDao extends DaoService {
 
 		return result;
 	}
+	/**
+	 * Find an Customer with the primary key.
+	 * @param key
+	 * @return
+	 * @throws Exception
+	 */
+	public Customer findCustomerByKey(int key) throws Exception{
+		Customer result = null;
+		try {
+			if (em == null || !em.isOpen()) {
+				this.initEntityManager();
+			}
+			result = em.find(Customer.class, key);
+		} catch (Exception e) {
+			throw e;
+		}
+		finally {
+			this.cleanResources();
+		}
+		return result;
+	}
+	/**
+	 * Find customers with a specified last name.
+	 * @param name
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Customer> findCustomersByLastName(String name) throws Exception{
+		List<Customer> result = null;
+		try {
 
+			if (em == null || !em.isOpen()) {
+				this.initEntityManager();
+			}
+
+			result = em.createNamedQuery("findCustomersByLastName")
+					.setParameter("iLname", name.toLowerCase())
+				    .getResultList();
+
+		} catch (Exception e) {
+			throw new Exception();
+		} finally {
+			this.cleanResources();
+		}
+		
+		return result;
+	}
 }

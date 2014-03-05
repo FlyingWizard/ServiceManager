@@ -42,10 +42,15 @@ public class AddressDaoTest {
 	public void testAddress() {
 		AddressDao ad = new AddressDao();
 		Address a = new Address("Veldweg","103","2260","Westerlo");
+		Address test = null;
 		try {
 			ad.insertAddress(a);
-//			List<Address> addresses = ad.findAllAddresss();
-//			assertEquals(addresses.size(),1);
+			int key = a.getId();
+			if(key > 0){
+				test = ad.findAddressByKey(key);
+			}
+			assertTrue(test != null);
+				
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
