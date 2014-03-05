@@ -3,6 +3,7 @@ package dao.service;
 import java.util.List;
 
 import dao.entity.Address;
+import dao.entity.Customer;
 
 public class AddressDao extends DaoService {
 	public void insertAddress(Address myAddress) throws Exception {
@@ -19,7 +20,7 @@ public class AddressDao extends DaoService {
 			tx.commit();
 
 		} catch (Exception e) {
-			throw new Exception();
+			throw e;
 		} finally {
 			this.cleanResources();
 		}
@@ -44,7 +45,7 @@ public class AddressDao extends DaoService {
 			result = em.createNamedQuery("findAllAddresses").getResultList();
 
 		} catch (Exception e) {
-			throw new Exception();
+			throw e;
 		} finally {
 			this.cleanResources();
 		}
@@ -71,6 +72,24 @@ public class AddressDao extends DaoService {
 			this.cleanResources();
 		}
 		return result;
+	}
+	public void deleteAddress(Address a) throws Exception{
+		try {
+
+			if (em == null || !em.isOpen()) {
+				this.initEntityManager();
+			}
+			this.initTransaction();
+
+			tx.begin();
+			em.remove(em.merge(a));
+			tx.commit();
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			this.cleanResources();
+		}
 	}
 
 }

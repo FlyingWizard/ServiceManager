@@ -2,7 +2,7 @@ package dao.service;
 
 import java.util.List;
 
-import dao.entity.Address;
+import dao.entity.Customer;
 import dao.entity.Employee;
 
 public class EmployeeDao extends DaoService {
@@ -20,7 +20,7 @@ public class EmployeeDao extends DaoService {
 			tx.commit();
 
 		} catch (Exception e) {
-			throw new Exception();
+			throw e;
 		} finally {
 			this.cleanResources();
 		}
@@ -45,7 +45,7 @@ public class EmployeeDao extends DaoService {
 			result = em.createNamedQuery("findAllEmployees").getResultList();
 
 		} catch (Exception e) {
-			throw new Exception();
+			throw e;
 		} finally {
 			this.cleanResources();
 		}
@@ -72,6 +72,24 @@ public class EmployeeDao extends DaoService {
 			this.cleanResources();
 		}
 		return result;
+	}
+	public void deleteEmployee(Employee empl) throws Exception{
+		try {
+
+			if (em == null || !em.isOpen()) {
+				this.initEntityManager();
+			}
+			this.initTransaction();
+
+			tx.begin();
+			em.remove(em.merge(empl));
+			tx.commit();
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			this.cleanResources();
+		}
 	}
 
 }

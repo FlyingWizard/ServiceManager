@@ -32,13 +32,13 @@ public class Customer {
 	private String lName;
 	@Column(nullable = true, columnDefinition="varchar(20)")
 	private String vatNr;
-	@ManyToMany
+	@ManyToMany(cascade=javax.persistence.CascadeType.ALL)
 	private List<Address> deliveryAddresses;
 	@OneToOne(cascade=javax.persistence.CascadeType.ALL)
 	private Address invoiceAddress;
 	@OneToMany(cascade=javax.persistence.CascadeType.ALL)
 	private List<Contact> contactDetails;
-	@OneToMany(mappedBy="customer")
+	@OneToMany(cascade=javax.persistence.CascadeType.ALL,mappedBy="customer")
 	private List<ServiceCall> serviceCalls;
 	
 	public Customer(){}

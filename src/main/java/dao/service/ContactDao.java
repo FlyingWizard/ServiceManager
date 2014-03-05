@@ -2,7 +2,6 @@ package dao.service;
 
 import java.util.List;
 
-import dao.entity.Address;
 import dao.entity.Contact;
 import dao.entity.ContactType;
 
@@ -21,7 +20,7 @@ public class ContactDao extends DaoService {
 			tx.commit();
 
 		} catch (Exception e) {
-			throw new Exception();
+			throw e;
 		} finally {
 			this.cleanResources();
 		}
@@ -46,7 +45,7 @@ public class ContactDao extends DaoService {
 			result = em.createNamedQuery("findAllContacts").getResultList();
 
 		} catch (Exception e) {
-			throw new Exception();
+			throw e;
 		} finally {
 			this.cleanResources();
 		}
@@ -68,7 +67,7 @@ public class ContactDao extends DaoService {
 			tx.commit();
 
 		} catch (Exception e) {
-			throw new Exception();
+			throw e;
 		} finally {
 			this.cleanResources();
 		}
@@ -110,7 +109,7 @@ public class ContactDao extends DaoService {
 				    .getResultList();
 
 		} catch (Exception e) {
-			throw new Exception();
+			throw e;
 		} finally {
 			this.cleanResources();
 		}
@@ -133,7 +132,7 @@ public class ContactDao extends DaoService {
 			result = em.createNamedQuery("findAllContacttypes").getResultList();
 
 		} catch (Exception e) {
-			throw new Exception();
+			throw e;
 		} finally {
 			this.cleanResources();
 		}
@@ -162,5 +161,23 @@ public class ContactDao extends DaoService {
 			this.cleanResources();
 		}
 		return result;
+	}
+	public void deleteContact(Contact c) throws Exception{
+		try {
+
+			if (em == null || !em.isOpen()) {
+				this.initEntityManager();
+			}
+			this.initTransaction();
+
+			tx.begin();
+			em.remove(em.merge(c));
+			tx.commit();
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			this.cleanResources();
+		}
 	}
 }

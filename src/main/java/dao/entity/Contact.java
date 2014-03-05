@@ -16,7 +16,7 @@ public class Contact {
 	private int id;
 	@Column(nullable = false)
 	private String contact;
-	@ManyToOne(cascade=javax.persistence.CascadeType.ALL)
+	@ManyToOne
 	private ContactType type;
 	
 	public Contact(){}

@@ -2,8 +2,6 @@ package dao.service;
 
 import java.util.List;
 
-import dao.entity.Address;
-import dao.entity.ContactType;
 import dao.entity.Customer;
 
 public class CustomerDao extends DaoService {
@@ -21,7 +19,7 @@ public class CustomerDao extends DaoService {
 			tx.commit();
 
 		} catch (Exception e) {
-			throw new Exception();
+			throw e;
 		} finally {
 			this.cleanResources();
 		}
@@ -46,7 +44,7 @@ public class CustomerDao extends DaoService {
 			result = em.createNamedQuery("findAllCustomers").getResultList();
 
 		} catch (Exception e) {
-			throw new Exception();
+			throw e;
 		} finally {
 			this.cleanResources();
 		}
@@ -94,11 +92,29 @@ public class CustomerDao extends DaoService {
 				    .getResultList();
 
 		} catch (Exception e) {
-			throw new Exception();
+			throw e;
 		} finally {
 			this.cleanResources();
 		}
 		
 		return result;
+	}
+	public void deleteCustomer(Customer c) throws Exception{
+		try {
+
+			if (em == null || !em.isOpen()) {
+				this.initEntityManager();
+			}
+			this.initTransaction();
+
+			tx.begin();
+			em.remove(em.merge(c));
+			tx.commit();
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			this.cleanResources();
+		}
 	}
 }

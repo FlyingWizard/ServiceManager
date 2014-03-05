@@ -2,7 +2,6 @@ package dao.service;
 
 import java.util.List;
 
-import dao.entity.Address;
 import dao.entity.ServiceCall;
 
 public class ServiceCallDao extends DaoService {
@@ -20,7 +19,7 @@ public class ServiceCallDao extends DaoService {
 			tx.commit();
 
 		} catch (Exception e) {
-			throw new Exception();
+			throw e;
 		} finally {
 			this.cleanResources();
 		}
@@ -45,7 +44,7 @@ public class ServiceCallDao extends DaoService {
 			result = em.createNamedQuery("findAllServiceCalls").getResultList();
 
 		} catch (Exception e) {
-			throw new Exception();
+			throw e;
 		} finally {
 			this.cleanResources();
 		}
@@ -72,6 +71,24 @@ public class ServiceCallDao extends DaoService {
 			this.cleanResources();
 		}
 		return result;
+	}
+	public void deleteServiceCall(ServiceCall sc) throws Exception{
+		try {
+
+			if (em == null || !em.isOpen()) {
+				this.initEntityManager();
+			}
+			this.initTransaction();
+
+			tx.begin();
+			em.remove(em.merge(sc));
+			tx.commit();
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			this.cleanResources();
+		}
 	}
 }
 

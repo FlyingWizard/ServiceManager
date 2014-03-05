@@ -29,7 +29,7 @@ public class CustomerDaoTest {
 	public void testCustomer() {
 		Address a = new Address("Veldweg","103","2260","Westerlo");
 		CustomerDao cd = new CustomerDao();
-		Customer c = new Customer("Stijn","Heylen","BE0822556699",a);
+		Customer c = new Customer("Stijn","HeylenTest","BE0822556699",a);
 		Customer test = null;
 		int key = 0;
 
@@ -61,7 +61,7 @@ public class CustomerDaoTest {
 		
 		try {
 			
-			Customer c = new Customer("Stijn","Heylen","BE0822556699");
+			Customer c = new Customer("Stijn","HeylenTest","BE0822556699");
 			ContactDao ctcd = new ContactDao();
 			ContactTypeCST helper = new ContactTypeCST();	
 			c.AddContact("sh@gmail.com",helper.EMAIL() );
@@ -78,6 +78,30 @@ public class CustomerDaoTest {
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+			assertTrue(false);
+		}
+		assertTrue(true);
+	}
+	@Test
+	public void testDeleteCustomer() {
+		
+		CustomerDao cd = new CustomerDao();
+		Customer test = null;
+		int key = 0;
+
+		try {
+			List<Customer> customers = cd.findCustomersByLastName("HeylenTest");
+			test = customers.get(0);
+			key = test.getId();
+			cd.deleteCustomer(test);
+			test = null;
+			test = cd.findCustomerByKey(key);
+			assertTrue(test == null);
+			for(Customer  c : cd.findCustomersByLastName("HeylenTest")){
+				cd.deleteCustomer(c);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(false);
 		}
