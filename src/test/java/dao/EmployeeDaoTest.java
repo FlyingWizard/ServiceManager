@@ -13,7 +13,7 @@ import org.junit.Test;
 import dao.entity.Address;
 import dao.entity.Employee;
 import dao.service.EmployeeDao;
-import dao.service.PersistanceManager;
+import dao.service.PersistenceManager;
 
 
 public class EmployeeDaoTest {
@@ -24,7 +24,7 @@ public class EmployeeDaoTest {
 	}
 	@After
 	public void cleanUp(){
-		PersistanceManager.cleanResources();
+		PersistenceManager.cleanResources();
 	}
 
 	@Test

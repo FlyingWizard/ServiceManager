@@ -15,7 +15,7 @@ public abstract class DaoService {
 	protected EntityTransaction tx;
 	
 	protected EntityManager getEntityManager(){
-		return PersistanceManager.getEntityManager();
+		return PersistenceManager.getEntityManager();
 	}
 
 	protected void initTransaction() {

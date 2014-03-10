@@ -16,7 +16,7 @@ import dao.entity.Customer;
 import dao.service.ContactDao;
 import dao.service.ContactTypeCST;
 import dao.service.CustomerDao;
-import dao.service.PersistanceManager;
+import dao.service.PersistenceManager;
 
 
 public class CustomerDaoTest {
@@ -27,7 +27,7 @@ public class CustomerDaoTest {
 	}
 	@After
 	public void cleanUp(){
-		PersistanceManager.cleanResources();
+		PersistenceManager.cleanResources();
 	}
 
 	@Test

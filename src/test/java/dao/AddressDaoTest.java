@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import dao.entity.Address;
 import dao.service.AddressDao;
-import dao.service.PersistanceManager;
+import dao.service.PersistenceManager;
 
 
 public class AddressDaoTest {
@@ -24,13 +24,13 @@ public class AddressDaoTest {
 	}
 	@After
 	public void cleanUp(){
-		PersistanceManager.cleanResources();
+		PersistenceManager.cleanResources();
 	}
 
 	@Test
 	public void testBasic() {
 		boolean ok = false;
-		EntityManager em = PersistanceManager.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		if(em!=null){
 			ok = true;
 		}

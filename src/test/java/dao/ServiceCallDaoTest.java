@@ -16,7 +16,7 @@ import dao.entity.Employee;
 import dao.entity.ServiceCall;
 import dao.service.CustomerDao;
 import dao.service.EmployeeDao;
-import dao.service.PersistanceManager;
+import dao.service.PersistenceManager;
 import dao.service.ServiceCallDao;
 
 
@@ -28,7 +28,7 @@ public class ServiceCallDaoTest {
 	}
 	@After
 	public void cleanUp(){
-		PersistanceManager.cleanResources();
+		PersistenceManager.cleanResources();
 	}
 	
 	@Test

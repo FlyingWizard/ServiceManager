@@ -9,7 +9,7 @@ import javax.persistence.Persistence;
  * @author Stijn Heylen
  *
  */
-public class PersistanceManager {
+public class PersistenceManager {
 	//Application managed entity manager
 	public static EntityManager ENTITY_MGR = null;
 	private static EntityManagerFactory ENTITY_MGR_FACT = null;
