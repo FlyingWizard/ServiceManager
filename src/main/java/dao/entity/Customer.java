@@ -72,7 +72,7 @@ public class Customer extends Person{
 		this(fn,ln,vatnr,new Address(street, hnr, zip, city, country));		
 	}
 	/**
-	 * Creates customer with address for invoicing and delivery
+	 * Creates customer with address for home, invoicing and delivery
 	 * @param fn
 	 * @param ln
 	 * @param vatnr
@@ -81,6 +81,7 @@ public class Customer extends Person{
 	public Customer(String fn, String ln, String vatnr,Address a){
 		this(fn,ln,vatnr);
 		this.invoiceAddress = a;
+		this.homeAddress = 	a;
 		this.deliveryAddresses = new ArrayList<Address>();
 		this.deliveryAddresses.add(a);		
 	}
